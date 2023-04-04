@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Genre, Playlist
+from .models import Artist, Genre, Playlist
+
+class ArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ['name', 'bio', 'image']
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:

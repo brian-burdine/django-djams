@@ -7,8 +7,10 @@ from .serializers import (
     ArtistReadOnlySerializer,
     ArtistWriteSerializer,
     GenreSerializer,
-    PlaylistSerializer,
-    SongSerializer
+    PlaylistReadOnlySerializer,
+    PlaylistWriteSerializer,
+    SongReadOnlySerializer,
+    SongWriteSerializer
 )
 
 # Create your views here.
@@ -38,8 +40,18 @@ class ArtistViewSet(viewsets.ModelViewSet):
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     queryset = Playlist.objects.all()
-    serializer_class = PlaylistSerializer
+    
+    def get_serializer_class(self):
+        if self.action in write_actions:
+            return PlaylistWriteSerializer
+        
+        return PlaylistReadOnlySerializer
 
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
-    serializer_class = SongSerializer
+    
+    def get_serializer_class(self):
+        if self.action in write_actions:
+            return SongWriteSerializer
+        
+        return SongReadOnlySerializer

@@ -36,6 +36,7 @@ class Genre(models.Model):
 
 class Playlist(models.Model):
     name = models.CharField(max_length=500)
+    songs = models.ManyToManyField('Song', related_name='playlists', related_query_name='playlist')
 
     def __str__(self):
         return self.name

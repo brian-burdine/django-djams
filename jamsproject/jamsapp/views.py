@@ -4,7 +4,8 @@ from .models import Album, Artist, Genre, Playlist, Song
 from .serializers import (
     AlbumReadOnlySerializer,
     AlbumWriteSerializer,
-    ArtistSerializer,
+    ArtistReadOnlySerializer,
+    ArtistWriteSerializer,
     GenreSerializer,
     PlaylistSerializer,
     SongSerializer
@@ -28,7 +29,12 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
 class ArtistViewSet(viewsets.ModelViewSet):
     queryset = Artist.objects.all()
-    serializer_class = ArtistSerializer
+    
+    def get_serializer_class(self):
+        if self.action in write_actions:
+            return ArtistWriteSerializer
+        
+        return ArtistReadOnlySerializer
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     queryset = Playlist.objects.all()

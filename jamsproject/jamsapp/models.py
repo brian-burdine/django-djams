@@ -13,21 +13,22 @@ class Song(models.Model):
 class Album(models.Model):
     name = models.CharField(max_length=500)
     publish_date = models.DateField(default=date.today)
-    cover_art = models.URLField()
+    cover_art = models.URLField(blank=True)
+    genres = models.ManyToManyField('Genre', related_name='albums', related_query_name='album')
 
     def __str__(self):
         return self.name
 
 class Artist(models.Model):
     name = models.CharField(max_length=250)
-    bio = models.TextField()
-    image = models.URLField()
+    bio = models.TextField(blank=True)
+    image = models.URLField(blank=True)
 
     def __str__(self):
         return self.name
 
 class Genre(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True)
 
     def __str__(self):
         return self.name

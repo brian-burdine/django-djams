@@ -27,7 +27,7 @@ router.register(r'genres', views.GenreViewSet)
 router.register(r'playlists', views.PlaylistViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

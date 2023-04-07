@@ -6,6 +6,7 @@ class Song(models.Model):
     name = models.CharField(max_length=500)
     length = models.DurationField()
     album = models.ForeignKey('Album', on_delete=models.PROTECT)
+    artists = models.ManyToManyField('Artist', related_name='songs', related_query_name='song')
 
     def __str__(self):
         return self.name
@@ -23,7 +24,6 @@ class Artist(models.Model):
     name = models.CharField(max_length=250)
     bio = models.TextField(blank=True)
     image = models.URLField(blank=True)
-    songs = models.ManyToManyField('Song', related_name='artists', related_query_name='artist')
 
     def __str__(self):
         return self.name

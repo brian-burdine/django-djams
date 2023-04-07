@@ -17,19 +17,8 @@ class AlbumWriteSerializer(serializers.ModelSerializer):
         model = Album
         fields = ['name', 'publish_date', 'cover_art', 'genres']
 
-class SongReadOnlySerializer(serializers.ModelSerializer):
-    #album = AlbumReadOnlySerializer()
-    class Meta:
-        model = Song
-        fields = ['id', 'name', 'length', 'artists', 'album']
-
-class SongWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Song
-        fields = ['name', 'length', 'artists', 'album']
-
 class ArtistReadOnlySerializer(serializers.ModelSerializer):
-    songs = SongReadOnlySerializer(many=True)
+    #songs = SongReadOnlySerializer(many=True)
     class Meta:
         model = Artist
         fields = ['id', 'name', 'bio', 'image', 'songs']
@@ -38,6 +27,18 @@ class ArtistWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ['id', 'name', 'bio', 'image', 'songs']
+
+class SongReadOnlySerializer(serializers.ModelSerializer):
+    artists = ArtistReadOnlySerializer(many=True)
+    album = AlbumReadOnlySerializer()
+    class Meta:
+        model = Song
+        fields = ['id', 'name', 'length', 'artists', 'album']
+
+class SongWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Song
+        fields = ['name', 'length', 'artists', 'album']
 
 class PlaylistReadOnlySerializer(serializers.ModelSerializer):
     songs = SongReadOnlySerializer(many=True)

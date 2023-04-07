@@ -33,30 +33,36 @@ class ArtistBasicReadSerializer(serializers.HyperlinkedModelSerializer):
         model = Artist
         fields = ['name', 'url']
 
-class ArtistDetailedReadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Artist
-        fields = ['id', 'name', 'bio', 'image', 'songs']
-
 class ArtistWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ['id', 'name', 'bio', 'image', 'songs']
 
-class SongReadOnlySerializer(serializers.ModelSerializer):
-    artists = ArtistBasicReadSerializer(many=True)
-    album = AlbumBasicReadSerializer()
+class SongBasicReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ['id', 'name', 'length', 'artists', 'album']
+        fields = ['id', 'name']
 
 class SongWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['name', 'length', 'artists', 'album']
 
+class ArtistDetailedReadSerializer(serializers.ModelSerializer):
+    songs = SongBasicReadSerializer(many=True)
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'bio', 'image', 'songs']
+
+class SongDetailedReadSerializer(serializers.ModelSerializer):
+    artists = ArtistBasicReadSerializer(many=True)
+    album = AlbumBasicReadSerializer()
+    class Meta:
+        model = Song
+        fields = ['id', 'name', 'length', 'artists', 'album']
+
 class PlaylistReadOnlySerializer(serializers.ModelSerializer):
-    songs = SongReadOnlySerializer(many=True)
+    songs = SongDetailedReadSerializer(many=True)
     class Meta:
         model = Playlist
         fields = ['id', 'name', 'songs']

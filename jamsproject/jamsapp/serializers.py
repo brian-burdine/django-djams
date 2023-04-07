@@ -1,13 +1,24 @@
 from rest_framework import serializers
 from .models import Album, Artist, Genre, Playlist, Song
 
-class GenreSerializer(serializers.ModelSerializer):
+class GenreBasicReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['name']
+
+class GenreReadWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['id', 'name']
 
-class AlbumReadOnlySerializer(serializers.ModelSerializer):
-    genres = GenreSerializer(many=True)
+class AlbumBasicReadSerializer(serializers.HyperlinkedModelSerializer):
+    genres = GenreBasicReadSerializer(many=True)
+    class Meta:
+        model = Album
+        fields = ['name', 'genres', 'url']
+
+class AlbumDetailedReadSerializer(serializers.ModelSerializer):
+    genres = GenreBasicReadSerializer(many=True)
     class Meta:
         model = Album
         fields = ['id', 'name', 'publish_date', 'cover_art', 'genres']
@@ -17,8 +28,12 @@ class AlbumWriteSerializer(serializers.ModelSerializer):
         model = Album
         fields = ['name', 'publish_date', 'cover_art', 'genres']
 
-class ArtistReadOnlySerializer(serializers.ModelSerializer):
-    #songs = SongReadOnlySerializer(many=True)
+class ArtistBasicReadSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ['name', 'url']
+
+class ArtistDetailedReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ['id', 'name', 'bio', 'image', 'songs']
@@ -29,8 +44,8 @@ class ArtistWriteSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'bio', 'image', 'songs']
 
 class SongReadOnlySerializer(serializers.ModelSerializer):
-    artists = ArtistReadOnlySerializer(many=True)
-    album = AlbumReadOnlySerializer()
+    artists = ArtistBasicReadSerializer(many=True)
+    album = AlbumBasicReadSerializer()
     class Meta:
         model = Song
         fields = ['id', 'name', 'length', 'artists', 'album']

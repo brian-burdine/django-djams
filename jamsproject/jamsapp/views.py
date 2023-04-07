@@ -2,11 +2,11 @@ from django.shortcuts import render
 from rest_framework import permissions, viewsets
 from .models import Album, Artist, Genre, Playlist, Song
 from .serializers import (
-    AlbumReadOnlySerializer,
+    AlbumDetailedReadSerializer,
     AlbumWriteSerializer,
-    ArtistReadOnlySerializer,
+    ArtistDetailedReadSerializer,
     ArtistWriteSerializer,
-    GenreSerializer,
+    GenreReadWriteSerializer,
     PlaylistReadOnlySerializer,
     PlaylistWriteSerializer,
     SongReadOnlySerializer,
@@ -17,26 +17,26 @@ from .serializers import (
 write_actions = ["create", "update", "partial_update", "destroy"]
 
 class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
+    queryset = Genre.objects.all().order_by('name')
+    serializer_class = GenreReadWriteSerializer
 
 class AlbumViewSet(viewsets.ModelViewSet):
-    queryset = Album.objects.all()
+    queryset = Album.objects.all().order_by('id')
     
     def get_serializer_class(self):
         if self.action in write_actions:
             return AlbumWriteSerializer
         
-        return AlbumReadOnlySerializer
+        return AlbumDetailedReadSerializer
 
 class ArtistViewSet(viewsets.ModelViewSet):
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.all().order_by('id')
     
     def get_serializer_class(self):
         if self.action in write_actions:
             return ArtistWriteSerializer
         
-        return ArtistReadOnlySerializer
+        return ArtistDetailedReadSerializer
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     queryset = Playlist.objects.all()
@@ -48,7 +48,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         return PlaylistReadOnlySerializer
 
 class SongViewSet(viewsets.ModelViewSet):
-    queryset = Song.objects.all()
+    queryset = Song.objects.all().order_by('id')
     
     def get_serializer_class(self):
         if self.action in write_actions:

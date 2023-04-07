@@ -9,7 +9,7 @@ from .serializers import (
     GenreReadWriteSerializer,
     PlaylistReadOnlySerializer,
     PlaylistWriteSerializer,
-    SongReadOnlySerializer,
+    SongDetailedReadSerializer,
     SongWriteSerializer
 )
 
@@ -54,4 +54,4 @@ class SongViewSet(viewsets.ModelViewSet):
         if self.action in write_actions:
             return SongWriteSerializer
         
-        return SongReadOnlySerializer
+        return SongDetailedReadSerializer
